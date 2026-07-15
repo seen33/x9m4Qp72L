@@ -1,52 +1,135 @@
-const AudioContext =
-window.AudioContext ||
-window.webkitAudioContext;
+*{
+box-sizing:border-box;
+}
 
 
-const ctx = new AudioContext();
+body{
+
+margin:0;
+
+overflow:hidden;
+
+background:#000;
+
+font-family:
+"Segoe UI",
+sans-serif;
+
+color:white;
+
+}
 
 
 
-function playNote(freq){
+.room{
+
+height:100vh;
+
+width:100vw;
+
+background:
+
+radial-gradient(
+circle at center,
+#242424,
+#050505 70%
+);
+
+position:relative;
+
+overflow:hidden;
+
+}
 
 
-let osc = ctx.createOscillator();
-
-let gain = ctx.createGain();
 
 
 
-osc.type="triangle";
-
-osc.frequency.value=freq;
+/* باران */
 
 
+.rain{
 
-gain.gain.setValueAtTime(
-0.3,
-ctx.currentTime
+position:absolute;
+
+inset:0;
+
+
+background:
+
+repeating-linear-gradient(
+
+115deg,
+
+transparent 0px,
+
+transparent 20px,
+
+rgba(255,255,255,.18) 22px,
+
+transparent 24px
+
 );
 
 
+animation:
 
-gain.gain.exponentialRampToValueAtTime(
-0.001,
-ctx.currentTime+0.7
+rain .35s linear infinite;
+
+}
+
+
+
+@keyframes rain{
+
+
+from{
+
+background-position:0 0;
+
+}
+
+
+to{
+
+background-position:0 100px;
+
+}
+
+}
+
+
+
+
+
+.glow{
+
+
+position:absolute;
+
+width:500px;
+
+height:500px;
+
+background:
+
+radial-gradient(
+circle,
+rgba(0,200,255,.25),
+transparent 70%
 );
 
 
+left:50%;
 
-osc.connect(gain);
+top:50%;
 
-gain.connect(ctx.destination);
+transform:
+
+translate(-50%,-50%);
 
 
-
-osc.start();
-
-osc.stop(
-ctx.currentTime+0.7
-);
+filter:blur(50px);
 
 
 }
@@ -55,127 +138,146 @@ ctx.currentTime+0.7
 
 
 
-let clicks=0;
+.scene{
 
-let songStarted=false;
+height:100%;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+flex-direction:column;
+
+position:relative;
+
+z-index:5;
+
+}
 
 
 
-document
-.querySelectorAll(".key")
-.forEach(key=>{
 
 
-key.onclick=function(){
+#intro{
+
+text-align:center;
+
+animation:
+
+fade 3s infinite alternate;
+
+}
 
 
-ctx.resume();
+#intro h1{
+
+font-size:40px;
+
+font-weight:300;
+
+}
 
 
 
-playNote(
-Number(key.dataset.note)
+#intro p{
+
+opacity:.6;
+
+}
+
+
+
+@keyframes fade{
+
+from{
+opacity:.3;
+}
+
+to{
+opacity:1;
+}
+
+}
+
+
+
+
+
+/* piano */
+
+
+.piano{
+
+display:flex;
+
+margin-top:70px;
+
+position:relative;
+
+}
+
+
+
+.key{
+
+
+width:55px;
+
+height:220px;
+
+
+background:
+
+linear-gradient(
+white,
+#ddd
 );
 
 
+border:
 
-key.classList.add("active");
-
-
-
-setTimeout(()=>{
-
-key.classList.remove("active");
-
-},150);
+2px solid #111;
 
 
+border-radius:
 
-clicks++;
+0 0 10px 10px;
 
 
+cursor:pointer;
 
-// بعد از 5 کلیک شروع سورپرایز
+transition:.15s;
 
-if(clicks>=5){
 
-startBirthday();
+box-shadow:
+
+0 10px 20px #000;
 
 }
 
 
-};
+
+.key:hover{
+
+box-shadow:
+
+0 0 30px cyan;
+
+}
 
 
 
-});
+.key.active{
 
 
+transform:
+
+translateY(15px);
 
 
-
-function startBirthday(){
-
-
-if(songStarted)
-return;
-
-
-songStarted=true;
-
-
-
-document
-.getElementById("hint")
-.innerHTML=
-"✨ A surprise is coming...";
-
-
-
-let melody=[
-
-
-392,392,440,392,523,493,
-
-392,392,440,392,587,523,
-
-392,392,784,659,523,493,440,
-
-698,698,659,523,587,523
-
-];
-
-
-
-melody.forEach((note,i)=>{
-
-
-setTimeout(()=>{
-
-playNote(note);
-
-
-},i*500);
-
-
-
-});
-
-
-
-
-
-// بعد از تمام شدن آهنگ پیام ساخته شود
-
-setTimeout(()=>{
-
-
-showMessage();
-
-
-},
-melody.length*500+1000);
-
+background:#7df;
 
 
 }
@@ -183,43 +285,77 @@ melody.length*500+1000);
 
 
 
-
-function showMessage(){
-
-
-let div=document.createElement("div");
+.black{
 
 
-div.className="final";
+position:absolute;
+
+width:35px;
+
+height:130px;
+
+background:#050505;
 
 
+top:0;
 
-div.innerHTML=`
-
-<h2>
-🎉 Happy Birthday Arshia 🎉
-</h2>
-
-<p>
-May your dreams come true ✨
-</p>
-
-`;
+z-index:10;
 
 
+border-radius:
 
-document
-.querySelector(".content")
-.appendChild(div);
+0 0 8px 8px;
+
+}
 
 
 
-setTimeout(()=>{
 
-div.classList.add("show");
 
-},100);
+/* پایان */
 
+
+#final{
+
+
+position:absolute;
+
+z-index:20;
+
+left:50%;
+
+top:50%;
+
+transform:
+
+translate(-50%,-50%)
+scale(.2);
+
+
+text-align:center;
+
+
+opacity:0;
+
+
+transition:
+
+3s;
+
+}
+
+
+
+#final.show{
+
+
+opacity:1;
+
+
+transform:
+
+translate(-50%,-50%)
+scale(1);
 
 
 }
@@ -228,29 +364,100 @@ div.classList.add("show");
 
 
 
-
-// ذرات نور
-
-for(let i=0;i<80;i++){
+#final h2{
 
 
-let p=document.createElement("div");
+font-size:70px;
 
 
-p.className="particle";
+text-shadow:
+
+0 0 20px cyan,
+
+0 0 60px white;
 
 
-p.style.left=
-Math.random()*100+"vw";
+}
 
 
-p.style.animationDelay=
-Math.random()*5+"s";
 
 
-document
-.querySelector(".particles")
-.appendChild(p);
+
+.particle{
+
+
+position:absolute;
+
+
+width:6px;
+
+height:6px;
+
+
+background:white;
+
+
+border-radius:50%;
+
+
+animation:
+
+float 6s linear infinite;
+
+}
+
+
+
+@keyframes float{
+
+
+from{
+
+transform:
+translateY(100vh);
+
+}
+
+
+to{
+
+transform:
+translateY(-20vh);
+
+opacity:0;
+
+}
+
+}
+
+
+
+
+
+@media(max-width:600px){
+
+
+.key{
+
+width:35px;
+
+height:150px;
+
+}
+
+
+#final h2{
+
+font-size:35px;
+
+}
+
+
+#intro h1{
+
+font-size:25px;
+
+}
 
 
 }
