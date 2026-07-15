@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>The Hidden Birthday</title>
+<style>
+body{
+    margin:0;
+    height:100vh;
+    background:linear-gradient(#10182f,#050814);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    color:white;
+    font-family:Arial,sans-serif;
+    overflow:hidden;
+}
+#message{
+    position:absolute;
+    top:15%;
+    font-size:22px;
+    text-align:center;
+}
+#star{
+    font-size:45px;
+    cursor:pointer;
+    animation:pulse 2s infinite;
+}
+@keyframes pulse{
+    50%{transform:scale(1.3)}
+}
+.star{
+    position:absolute;
+    font-size:35px;
+    cursor:pointer;
+    animation:float 2s infinite alternate;
+}
+@keyframes float{
+    from{transform:translateY(0)}
+    to{transform:translateY(-20px)}
+}
+#door,#cake,#final{
+    display:none;
+    cursor:pointer;
+    text-align:center;
+}
+#door{font-size:90px}
+#cake{font-size:100px}
+#final{
+    font-size:30px;
+    cursor:default;
+}
+</style>
+</head>
+
+<body>
+
+<div id="message">Wait... something is missing.</div>
+<div id="star">✨</div>
+<div id="door">🚪</div>
+<div id="cake">🎂🕯️</div>
+<div id="final">🎉 Happy Birthday 🎉<br>
+<small>A little magic was waiting for you.</small>
+</div>
+
+<script>
+const star=document.getElementById("star");
+const message=document.getElementById("message");
+const door=document.getElementById("door");
+const cake=document.getElementById("cake");
+const final=document.getElementById("final");
+
+star.onclick=()=>{
+    star.style.display="none";
+    message.innerHTML="You found the first surprise ✨";
+
+    for(let i=0;i<7;i++){
+        let s=document.createElement("div");
+        s.className="star";
+        s.innerHTML="⭐";
+        s.style.left=Math.random()*80+10+"%";
+        s.style.top=Math.random()*70+10+"%";
+        document.body.appendChild(s);
+
+        s.onclick=()=>{
+            s.remove();
+            if(document.querySelectorAll(".star").length===0){
+                message.innerHTML="A hidden door appeared...";
+                door.style.display="block";
+            }
+        };
+    }
+};
+
+door.onclick=()=>{
+    door.style.display="none";
+    message.innerHTML="Something is waiting inside...";
+    setTimeout(()=>{
+        cake.style.display="block";
+        message.innerHTML="Make a wish 🕯️";
+    },1000);
+};
+
+cake.onclick=()=>{
+    cake.innerHTML="🎂✨";
+    message.style.display="none";
+    setTimeout(()=>{
+        cake.style.display="none";
+        final.style.display="block";
+    },1500);
+};
+</script>
+
+</body>
+</html>
