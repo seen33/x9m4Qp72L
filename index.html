@@ -1,23 +1,81 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Secret Elevator</title><style>
-body{margin:0;background:#0f172a;color:#fff;font-family:Arial;height:100vh;display:flex;justify-content:center;align-items:center;overflow:hidden}
-#elevator{width:320px;height:520px;border:4px solid #666;border-radius:14px;background:#1e293b;position:relative}
-#scene{height:430px;display:flex;justify-content:center;align-items:center;font-size:90px}
-#panel{height:90px;border-top:2px solid #555;text-align:center;padding-top:10px}
-button{padding:10px 24px;font-size:22px}
-#doors{position:absolute;top:0;left:0;width:100%;height:430px;pointer-events:none}
-.door{position:absolute;top:0;width:50%;height:100%;background:#475569;transition:1s}
-.left{left:0}.right{right:0}.openL{transform:translateX(-100%)}.openR{transform:translateX(100%)}
-#final{display:none;position:fixed;inset:0;background:linear-gradient(135deg,#111827,#312e81);justify-content:center;align-items:center;flex-direction:column;font-size:56px;text-align:center}
-small{font-size:24px}
-</style></head><body>
-<div id="elevator"><div id="scene">🏢</div><div id="doors"><div class="door left"></div><div class="door right"></div></div><div id="panel"><div id="msg">Floor 0 — Press ▲</div><button id="btn">▲</button></div></div>
-<div id="final"><div>🎉 Happy Birthday<br>Arshia 🎂</div><small>Hope every new floor this year brings a new adventure.</small></div>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Mystery Piano</title>
+<style>
+body{margin:0;background:#111827;color:#fff;font-family:Arial;display:flex;justify-content:center;align-items:center;height:100vh;overflow:hidden}
+#wrap{text-align:center}
+h2{font-weight:400;opacity:.9}
+#piano{display:flex;justify-content:center;margin-top:30px}
+.key{width:70px;height:260px;background:#fff;border:2px solid #222;border-radius:0 0 8px 8px;margin:1px;cursor:pointer;transition:.12s;display:flex;align-items:flex-end;justify-content:center;padding-bottom:10px;color:#222;font-weight:bold}
+.key:active,.active{transform:translateY(6px);background:#ddd}
+#msg{margin-top:25px;font-size:20px;opacity:.8}
+#final{position:fixed;inset:0;display:none;background:#0b1020;justify-content:center;align-items:center;flex-direction:column}
+#final h1{font-size:64px;margin:0}
+#final p{font-size:24px}
+</style>
+</head>
+<body>
+<div id="wrap">
+<h2>Play something...</h2>
+<div id="piano"></div>
+<div id="msg">Nobody knows what happens after enough notes.</div>
+</div>
+<div id="final">
+<h1>🎉 Happy Birthday<br>Arshia 🎹</h1>
+<p>Every note led here.</p>
+</div>
 <script>
-const scenes=[["🌊","Floor 1 — Ocean"],["🚀","Floor 2 — Space"],["🌸","Floor 3 — Clouds"],["🎈","Floor 4 — Balloons"],["✨","Penthouse"]];
-let i=-1;
-btn.onclick=()=>{i++;if(i>=scenes.length){elevator.style.display="none";final.style.display="flex";return;}
-msg.textContent="Moving...";btn.disabled=true;
-document.querySelector(".left").classList.remove("openL");document.querySelector(".right").classList.remove("openR");
-setTimeout(()=>{scene.textContent=scenes[i][0];msg.textContent=scenes[i][1];
-document.querySelector(".left").classList.add("openL");document.querySelector(".right").classList.add("openR");btn.disabled=false;},800);}
-</script></body></html>
+const notes=[261.63,293.66,329.63,349.23,392.00,440.00,493.88];
+const names=["C","D","E","F","G","A","B"];
+const piano=document.getElementById("piano");
+const ctx=new (window.AudioContext||window.webkitAudioContext)();
+let count=0;
+function beep(f){
+ let o=ctx.createOscillator(),g=ctx.createGain();
+ o.frequency.value=f;o.type="sine";
+ o.connect(g);g.connect(ctx.destination);
+ g.gain.value=.15;
+ o.start();
+ g.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+.35);
+ o.stop(ctx.currentTime+.35);
+}
+names.forEach((n,i)=>{
+ let k=document.createElement("div");
+ k.className="key";
+ k.textContent=n;
+ k.onclick=()=>{
+   ctx.resume();
+   beep(notes[i]);
+   k.classList.add("active");
+   setTimeout(()=>k.classList.remove("active"),120);
+   count++;
+   if(count===10){
+      document.getElementById("msg").textContent="Wait... the piano is playing by itself.";
+      autoPlay();
+   }
+ };
+ piano.appendChild(k);
+});
+function autoPlay(){
+ const seq=[0,2,4,2,5,4,2,1,0];
+ let i=0;
+ const keys=document.querySelectorAll(".key");
+ const t=setInterval(()=>{
+   beep(notes[seq[i]]);
+   keys[seq[i]].classList.add("active");
+   setTimeout(()=>keys[seq[i]].classList.remove("active"),120);
+   i++;
+   if(i>=seq.length){
+      clearInterval(t);
+      setTimeout(()=>{
+        document.getElementById("final").style.display="flex";
+      },700);
+   }
+ },350);
+}
+</script>
+</body>
+</html>
