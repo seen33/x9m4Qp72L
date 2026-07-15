@@ -1,0 +1,321 @@
+*{
+    box-sizing:border-box;
+}
+
+
+body{
+
+    margin:0;
+    overflow:hidden;
+
+    background:#050505;
+    font-family:
+    "Segoe UI",
+    sans-serif;
+
+    color:white;
+
+}
+
+
+.room{
+
+    width:100vw;
+    height:100vh;
+
+    background:
+    radial-gradient(circle at center,
+    #222 0%,
+    #080808 50%,
+    #000 100%);
+
+    position:relative;
+
+}
+
+
+.rain{
+
+    position:absolute;
+    inset:0;
+
+    background-image:
+    linear-gradient(
+    120deg,
+    transparent 45%,
+    rgba(255,255,255,.15) 50%,
+    transparent 55%
+    );
+
+    background-size:
+    4px 80px;
+
+    animation:rain 0.35s linear infinite;
+
+}
+
+
+@keyframes rain{
+
+from{
+background-position:0 0;
+}
+
+to{
+background-position:0 80px;
+}
+
+}
+
+
+
+.scene{
+
+position:relative;
+
+height:100%;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+flex-direction:column;
+
+z-index:2;
+
+}
+
+
+h1{
+
+font-size:40px;
+
+letter-spacing:3px;
+
+animation:fade 3s infinite alternate;
+
+}
+
+
+
+@keyframes fade{
+
+from{
+opacity:.3;
+}
+
+to{
+opacity:1;
+}
+
+}
+
+
+
+
+.piano{
+
+display:flex;
+
+position:relative;
+
+margin-top:50px;
+
+}
+
+
+.key{
+
+height:180px;
+width:55px;
+
+background:white;
+
+border:1px solid #111;
+
+border-radius:0 0 8px 8px;
+
+cursor:pointer;
+
+}
+
+
+.key:active{
+
+background:#ddd;
+
+}
+
+
+
+.black{
+
+position:absolute;
+
+width:35px;
+height:110px;
+
+background:#000;
+
+border-radius:0 0 5px 5px;
+
+top:0;
+
+z-index:3;
+
+}
+
+
+
+.b1{left:38px}
+.b2{left:93px}
+.b3{left:203px}
+.b4{left:258px}
+.b5{left:313px}
+
+
+
+button{
+
+margin-top:40px;
+
+padding:15px 30px;
+
+border:none;
+
+border-radius:30px;
+
+background:#fff;
+
+font-size:18px;
+
+cursor:pointer;
+
+transition:.3s;
+
+}
+
+
+button:hover{
+
+transform:scale(1.1);
+
+}
+
+
+
+#final{
+
+position:absolute;
+
+opacity:0;
+
+text-align:center;
+
+transition:3s;
+
+}
+
+
+#final h2{
+
+font-size:60px;
+
+text-shadow:
+0 0 20px white,
+0 0 50px cyan;
+
+}
+
+
+
+#final.show{
+
+opacity:1;
+
+}
+
+
+
+.particle{
+
+position:absolute;
+
+width:5px;
+
+height:5px;
+
+background:white;
+
+border-radius:50%;
+
+animation:float 5s linear infinite;
+
+}
+
+
+
+@keyframes float{
+
+from{
+
+transform:translateY(100vh);
+
+opacity:0;
+
+}
+
+50%{
+
+opacity:1;
+
+}
+
+to{
+
+transform:translateY(-10vh);
+
+opacity:0;
+
+}
+
+}
+
+
+
+
+
+@media(max-width:600px){
+
+.key{
+
+width:35px;
+height:120px;
+
+}
+
+
+.black{
+
+width:22px;
+height:75px;
+
+}
+
+
+#final h2{
+
+font-size:35px;
+
+}
+
+
+h1{
+
+font-size:25px;
+
+}
+
+}
