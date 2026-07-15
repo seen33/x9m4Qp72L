@@ -1,81 +1,63 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Mystery Piano</title>
-<style>
-body{margin:0;background:#111827;color:#fff;font-family:Arial;display:flex;justify-content:center;align-items:center;height:100vh;overflow:hidden}
-#wrap{text-align:center}
-h2{font-weight:400;opacity:.9}
-#piano{display:flex;justify-content:center;margin-top:30px}
-.key{width:70px;height:260px;background:#fff;border:2px solid #222;border-radius:0 0 8px 8px;margin:1px;cursor:pointer;transition:.12s;display:flex;align-items:flex-end;justify-content:center;padding-bottom:10px;color:#222;font-weight:bold}
-.key:active,.active{transform:translateY(6px);background:#ddd}
-#msg{margin-top:25px;font-size:20px;opacity:.8}
-#final{position:fixed;inset:0;display:none;background:#0b1020;justify-content:center;align-items:center;flex-direction:column}
-#final h1{font-size:64px;margin:0}
-#final p{font-size:24px}
-</style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Happy Birthday Arshia</title>
+
+<link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-<div id="wrap">
-<h2>Play something...</h2>
-<div id="piano"></div>
-<div id="msg">Nobody knows what happens after enough notes.</div>
+
+<div class="room">
+
+    <div class="rain"></div>
+
+    <div class="particles"></div>
+
+
+    <div class="scene">
+
+        <h1 id="title">A little surprise...</h1>
+
+        <div class="piano">
+
+            <div class="key white" data-note="261.63"></div>
+            <div class="key white" data-note="293.66"></div>
+            <div class="key white" data-note="329.63"></div>
+            <div class="key white" data-note="349.23"></div>
+            <div class="key white" data-note="392.00"></div>
+            <div class="key white" data-note="440.00"></div>
+            <div class="key white" data-note="493.88"></div>
+
+            <div class="black b1" data-note="277.18"></div>
+            <div class="black b2" data-note="311.13"></div>
+            <div class="black b3" data-note="369.99"></div>
+            <div class="black b4" data-note="415.30"></div>
+            <div class="black b5" data-note="466.16"></div>
+
+        </div>
+
+
+        <button id="play">
+            🎹 Play Birthday Song
+        </button>
+
+
+        <div id="final">
+            <h2>🎉 Happy Birthday Arshia 🎉</h2>
+            <p>May your dreams become reality</p>
+        </div>
+
+
+    </div>
+
 </div>
-<div id="final">
-<h1>🎉 Happy Birthday<br>Arshia 🎹</h1>
-<p>Every note led here.</p>
-</div>
-<script>
-const notes=[261.63,293.66,329.63,349.23,392.00,440.00,493.88];
-const names=["C","D","E","F","G","A","B"];
-const piano=document.getElementById("piano");
-const ctx=new (window.AudioContext||window.webkitAudioContext)();
-let count=0;
-function beep(f){
- let o=ctx.createOscillator(),g=ctx.createGain();
- o.frequency.value=f;o.type="sine";
- o.connect(g);g.connect(ctx.destination);
- g.gain.value=.15;
- o.start();
- g.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+.35);
- o.stop(ctx.currentTime+.35);
-}
-names.forEach((n,i)=>{
- let k=document.createElement("div");
- k.className="key";
- k.textContent=n;
- k.onclick=()=>{
-   ctx.resume();
-   beep(notes[i]);
-   k.classList.add("active");
-   setTimeout(()=>k.classList.remove("active"),120);
-   count++;
-   if(count===10){
-      document.getElementById("msg").textContent="Wait... the piano is playing by itself.";
-      autoPlay();
-   }
- };
- piano.appendChild(k);
-});
-function autoPlay(){
- const seq=[0,2,4,2,5,4,2,1,0];
- let i=0;
- const keys=document.querySelectorAll(".key");
- const t=setInterval(()=>{
-   beep(notes[seq[i]]);
-   keys[seq[i]].classList.add("active");
-   setTimeout(()=>keys[seq[i]].classList.remove("active"),120);
-   i++;
-   if(i>=seq.length){
-      clearInterval(t);
-      setTimeout(()=>{
-        document.getElementById("final").style.display="flex";
-      },700);
-   }
- },350);
-}
-</script>
+
+
+<script src="script.js"></script>
+
 </body>
 </html>
