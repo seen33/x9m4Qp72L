@@ -3,49 +3,47 @@ window.AudioContext ||
 window.webkitAudioContext;
 
 
-const ctx = new AudioContext();
+const audio =
+new AudioContext();
 
 
 
-function playNote(freq,time=0){
+function playNote(freq){
 
-let osc=ctx.createOscillator();
 
-let gain=ctx.createGain();
+let osc =
+audio.createOscillator();
+
+
+let gain =
+audio.createGain();
+
 
 
 osc.type="triangle";
 
+
 osc.frequency.value=freq;
 
 
-gain.gain.setValueAtTime(
-0.001,
-ctx.currentTime+time
-);
 
-
-gain.gain.exponentialRampToValueAtTime(
-0.4,
-ctx.currentTime+time+0.05
-);
-
-
-gain.gain.exponentialRampToValueAtTime(
-0.001,
-ctx.currentTime+time+0.8
-);
+gain.gain.value=.25;
 
 
 
 osc.connect(gain);
 
-gain.connect(ctx.destination);
+gain.connect(audio.destination);
 
 
-osc.start(ctx.currentTime+time);
 
-osc.stop(ctx.currentTime+time+1);
+osc.start();
+
+
+osc.stop(
+audio.currentTime + 0.6
+);
+
 
 }
 
@@ -53,17 +51,54 @@ osc.stop(ctx.currentTime+time+1);
 
 
 
-document.querySelectorAll(".key")
+let clicks=0;
+
+
+let started=false;
+
+
+
+document
+.querySelectorAll(".key")
 .forEach(key=>{
 
 
 key.onclick=()=>{
 
-ctx.resume();
+
+audio.resume();
+
+
 
 playNote(
 Number(key.dataset.note)
 );
+
+
+
+key.classList.add("active");
+
+
+
+setTimeout(()=>{
+
+key.classList.remove("active");
+
+},150);
+
+
+
+clicks++;
+
+
+
+if(clicks>=7){
+
+playBirthday();
+
+}
+
+
 
 };
 
@@ -74,16 +109,29 @@ Number(key.dataset.note)
 
 
 
-// Happy Birthday melody
 
-const song=[
+function playBirthday(){
+
+
+if(started)
+return;
+
+
+started=true;
+
+
+
+let melody=[
 
 
 392,392,440,392,523,493,
 
+
 392,392,440,392,587,523,
 
+
 392,392,784,659,523,493,440,
+
 
 698,698,659,523,587,523
 
@@ -92,50 +140,66 @@ const song=[
 
 
 
-document
-.getElementById("play")
-.onclick=()=>{
+
+melody.forEach(
+(note,index)=>{
 
 
-ctx.resume();
+setTimeout(()=>{
 
 
-song.forEach((n,i)=>{
+playNote(note);
 
-playNote(
-n,
-i*0.55
-);
+
+},
+
+index*450);
+
 
 });
 
 
 
+
+
+
 setTimeout(()=>{
 
+
 document
-.getElementById("final")
-.classList.add("show");
-
-
-},song.length*550+1000);
-
-
-};
+.getElementById("message")
+.classList
+.add("show");
 
 
 
+document
+.getElementById("hint")
+.style
+.display="none";
 
 
-// particles
 
-const particles=
-document.querySelector(".particles");
+},
+
+melody.length*450+1500);
+
+
+
+}
+
+
+
+
+
+// ساخت ذرات
 
 
 for(let i=0;i<80;i++){
 
+
 let p=document.createElement("div");
+
 
 p.className="particle";
 
@@ -149,26 +213,16 @@ Math.random()*5+"s";
 
 
 p.style.animationDuration=
-3+Math.random()*5+"s";
+3+
+Math.random()*5
++"s";
 
 
-particles.appendChild(p);
-
-}
-
-
-
-
-
-
-// شروع سینمایی
-
-setTimeout(()=>{
 
 document
-.getElementById("title")
-.innerHTML=
-"Tonight is special ✨";
+.querySelector(".particles")
+.appendChild(p);
 
 
-},3000);
+
+}
