@@ -1,361 +1,218 @@
-*{
-box-sizing:border-box;
-}
+const notes=[
 
+"C4",
+"D4",
+"E4",
+"F4",
+"G4",
+"A4",
+"B4",
+"C5",
+"D5",
+"E5",
+"F5"
 
-body{
-
-margin:0;
-
-overflow:hidden;
-
-background:#000;
-
-font-family:
-"Segoe UI",
-sans-serif;
-
-color:white;
-
-}
+];
 
 
 
-.room{
+const piano=
+document.getElementById("piano");
 
-height:100vh;
 
-width:100vw;
 
-background:
+let clicks=0;
 
-radial-gradient(
-circle at center,
-#242424,
-#050505 70%
-);
-
-position:relative;
-
-overflow:hidden;
-
-}
+let started=false;
 
 
 
 
 
-/* باران */
+// ساخت کلیدها
 
 
-.rain{
-
-position:absolute;
-
-inset:0;
+notes.forEach(note=>{
 
 
-background:
-
-repeating-linear-gradient(
-
-115deg,
-
-transparent 0px,
-
-transparent 20px,
-
-rgba(255,255,255,.18) 22px,
-
-transparent 24px
-
-);
+let key=document.createElement("div");
 
 
-animation:
+key.className="key";
 
-rain .35s linear infinite;
+
+key.dataset.note=note;
+
+
+
+key.onclick=()=>{
+
+
+play(note);
+
+
+key.classList.add("active");
+
+
+setTimeout(()=>{
+
+key.classList.remove("active");
+
+},150);
+
+
+
+clicks++;
+
+
+
+if(clicks>=6){
+
+birthday();
 
 }
 
 
 
-@keyframes rain{
+};
 
 
-from{
 
-background-position:0 0;
+piano.appendChild(key);
 
-}
 
 
-to{
+});
 
-background-position:0 100px;
 
-}
 
-}
 
 
 
+// صدای پیانو
 
 
-.glow{
+const synth =
+new Tone.PolySynth(
+Tone.Synth,
+{
 
+oscillator:{
+type:"fmtriangle"
+},
 
-position:absolute;
+envelope:{
 
-width:500px;
+attack:.01,
 
-height:500px;
+decay:.2,
 
-background:
+sustain:.3,
 
-radial-gradient(
-circle,
-rgba(0,200,255,.25),
-transparent 70%
-);
+release:1
 
-
-left:50%;
-
-top:50%;
-
-transform:
-
-translate(-50%,-50%);
-
-
-filter:blur(50px);
-
-
-}
-
-
-
-
-
-.scene{
-
-height:100%;
-
-display:flex;
-
-justify-content:center;
-
-align-items:center;
-
-flex-direction:column;
-
-position:relative;
-
-z-index:5;
-
-}
-
-
-
-
-
-#intro{
-
-text-align:center;
-
-animation:
-
-fade 3s infinite alternate;
-
-}
-
-
-#intro h1{
-
-font-size:40px;
-
-font-weight:300;
-
-}
-
-
-
-#intro p{
-
-opacity:.6;
-
-}
-
-
-
-@keyframes fade{
-
-from{
-opacity:.3;
-}
-
-to{
-opacity:1;
 }
 
 }
 
+).toDestination();
 
 
 
 
-/* piano */
+
+function play(note){
 
 
-.piano{
-
-display:flex;
-
-margin-top:70px;
-
-position:relative;
-
-}
+Tone.start();
 
 
+synth.triggerAttackRelease(
 
-.key{
+note,
 
+"8n"
 
-width:55px;
-
-height:220px;
-
-
-background:
-
-linear-gradient(
-white,
-#ddd
 );
 
 
-border:
-
-2px solid #111;
-
-
-border-radius:
-
-0 0 10px 10px;
-
-
-cursor:pointer;
-
-transition:.15s;
-
-
-box-shadow:
-
-0 10px 20px #000;
-
-}
-
-
-
-.key:hover{
-
-box-shadow:
-
-0 0 30px cyan;
-
-}
-
-
-
-.key.active{
-
-
-transform:
-
-translateY(15px);
-
-
-background:#7df;
-
-
-}
-
-
-
-
-.black{
-
-
-position:absolute;
-
-width:35px;
-
-height:130px;
-
-background:#050505;
-
-
-top:0;
-
-z-index:10;
-
-
-border-radius:
-
-0 0 8px 8px;
-
 }
 
 
 
 
 
-/* پایان */
 
 
-#final{
+// آهنگ تولد
 
 
-position:absolute;
+const song=[
 
-z-index:20;
+"G4","G4","A4","G4","C5","B4",
 
-left:50%;
+"G4","G4","A4","G4","D5","C5",
 
-top:50%;
+"G4","G4","G5","E5","C5","B4","A4",
 
-transform:
+"F5","F5","E5","C5","D5","C5"
 
-translate(-50%,-50%)
-scale(.2);
-
-
-text-align:center;
-
-
-opacity:0;
-
-
-transition:
-
-3s;
-
-}
+];
 
 
 
-#final.show{
 
 
-opacity:1;
+function birthday(){
 
 
-transform:
+if(started)return;
 
-translate(-50%,-50%)
-scale(1);
+
+started=true;
+
+
+
+document
+.getElementById("intro")
+.style.opacity=0;
+
+
+
+song.forEach((n,i)=>{
+
+
+setTimeout(()=>{
+
+
+play(n);
+
+
+},
+
+i*450);
+
+
+
+});
+
+
+
+
+setTimeout(()=>{
+
+
+document
+.getElementById("final")
+.classList
+.add("show");
+
+
+
+},
+
+song.length*450+1000);
+
 
 
 }
@@ -364,100 +221,30 @@ scale(1);
 
 
 
-#final h2{
+
+// ذرات
 
 
-font-size:70px;
+for(let i=0;i<100;i++){
 
 
-text-shadow:
-
-0 0 20px cyan,
-
-0 0 60px white;
+let p=document.createElement("div");
 
 
-}
+p.className="particle";
 
 
+p.style.left=
+Math.random()*100+"vw";
 
 
-
-.particle{
-
-
-position:absolute;
+p.style.animationDelay=
+Math.random()*5+"s";
 
 
-width:6px;
-
-height:6px;
-
-
-background:white;
-
-
-border-radius:50%;
-
-
-animation:
-
-float 6s linear infinite;
-
-}
-
-
-
-@keyframes float{
-
-
-from{
-
-transform:
-translateY(100vh);
-
-}
-
-
-to{
-
-transform:
-translateY(-20vh);
-
-opacity:0;
-
-}
-
-}
-
-
-
-
-
-@media(max-width:600px){
-
-
-.key{
-
-width:35px;
-
-height:150px;
-
-}
-
-
-#final h2{
-
-font-size:35px;
-
-}
-
-
-#intro h1{
-
-font-size:25px;
-
-}
+document
+.querySelector(".particles")
+.appendChild(p);
 
 
 }
